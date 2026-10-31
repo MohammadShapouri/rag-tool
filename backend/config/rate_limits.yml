@@ -1,0 +1,55 @@
+# Global default limits applied to endpoints not explicitly defined
+defaults:
+  - requests: 60
+    window: "1m"     # 60 requests per minute
+  - requests: 1000
+    window: "1d"     # 1000 requests per day
+
+# Endpoint-specific rate limit rules (Supports Regex)
+endpoints:
+  # Internal Chat Query endpoint
+  - path: "^/api/chat/sessions/\\d+/query/?$"
+    is_regex: true
+    limits:
+      - requests: 15
+        window: "1m"   # 15 queries per minute
+      - requests: 200
+        window: "1h"   # 200 queries per hour
+
+  # Public Chat & External Website Integration queries
+  - path: "^/api/(?:v1/public/chat|external/v1/(?:query|public/chat))/?$"
+    is_regex: true
+    limits:
+      - requests: 30
+        window: "1m"   # 30 requests per minute
+      - requests: 500
+        window: "1h"   # 500 requests per hour
+      - requests: 5000
+        window: "1d"   # 5000 requests per day
+
+  # User Roster & Staff Assignment endpoints
+  - path: "^/api/auth/users/?.*$"
+    is_regex: true
+    limits:
+      - requests: 45
+        window: "1m"   # 45 requests per minute
+      - requests: 600
+        window: "1h"   # 600 requests per hour
+
+  # Heavy Document Ingestion endpoint
+  - path: "^/api/documents/?$"
+    is_regex: true
+    limits:
+      - requests: 5
+        window: "1m"   # 5 uploads per minute
+      - requests: 50
+        window: "1d"   # 50 uploads per day
+
+  # Audit Logs and VectorDB Telemetry queries
+  - path: "^/api/(?:audit-)?logs/?.*$"
+    is_regex: true
+    limits:
+      - requests: 60
+        window: "1m"
+      - requests: 1000
+        window: "1h"

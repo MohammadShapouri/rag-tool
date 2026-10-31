@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+
+# ==========================================
+# Temporary & Scratch Files
+# ==========================================
+fc.py
+content.txt
+*.log
